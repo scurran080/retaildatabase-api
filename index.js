@@ -4,8 +4,6 @@ const pool = require("./db")
 
 app.use(express.json())
 
-//Routes
-
 //Create Item
 app.post("/food", async(req,res) => {
     try{
@@ -35,7 +33,6 @@ app.put("/food/:upc",async(req,res) => {
     try{
         const { upc } = req.params;
         const { name } = req.body;
-
         const updateItem = await pool.query("UPDATE food SET name = ($1) WHERE upc = ($2)",[ name, upc ]);
         //only really needed if we feel like verifying that the change actually took place
         res.json(updateItem);
@@ -54,9 +51,6 @@ app.delete("/food/:upc",async(req,res) => {
         console.error(err.message);
     }
 })
-
-
-
 
 app.listen(3000, () => {
     console.log("Server listening on port 3000...");
