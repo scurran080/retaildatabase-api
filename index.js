@@ -18,10 +18,19 @@ app.post("/food", async(req,res) => {
 })
 
 //Get item
-app.get("/food/:upc",async(req, res) => {
+//updated to now be able to get everything from the item database
+//if a single item is requested put ""
+//can later add functionality to get a certain quantity of items.
+app.get("/food",async(req, res) => {
     try{
-        const { upc }  = req.params;
-        const returnedItem = await pool.query("SELECT upc, name, description FROM food WHERE upc = ($1)",[ upc ]);
+        //const { upc }  = req.params;
+        const {upc,amount} = req.body;
+        var returnedItem;
+        if(amount == 'all'){
+            returnedItem = await pool.query("SELECT * FROM food");
+        }else{
+            returnedItem = await pool.query("SELECT upc, name, description, packagesize FROM food WHERE upc = ($1)",[ upc ]);
+        }
         res.json(returnedItem);
     }catch(err){
         console.error(err.message);
